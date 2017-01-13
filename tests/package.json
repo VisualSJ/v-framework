@@ -1,0 +1,12 @@
+{
+  "name": "v-framework-tester",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "build": "node ./scripts/build"
+  },
+  "author": "VisualSJ",
+  "license": "ISC"
+}

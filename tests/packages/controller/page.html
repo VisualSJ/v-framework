@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Controller</title>
+    <link href="app://style/base.css" rel="stylesheet"/>
+    <link href="app://font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <script src="app://script/init.js"></script>
+</head>
+<body>
+
+<style>
+    i {
+        margin: 0 4px;
+        padding: 8px;
+        cursor: pointer;
+    }
+
+    i[disabled] {
+        color: #555;
+    }
+</style>
+
+<i type="back" class="fa fa-fast-backward" aria-hidden="true"></i>
+<i type="play" class="fa fa-play" aria-hidden="true"></i>
+<i type="pause" class="fa fa-pause" aria-hidden="true" disabled></i>
+<!--<i type="stop" class="fa fa-stop" aria-hidden="true" disabled></i>-->
+<i type="forward" class="fa fa-fast-forward" aria-hidden="true"></i>
+
+<script>
+    (function () {
+        var $is = document.querySelectorAll('i');
+        Array.prototype.forEach.call($is, function (elem) {
+            elem.addEventListener('click', () => {
+                if (elem.getAttribute('disabled') !== null) {
+                    return;
+                }
+                Package.ajax({
+                    url: '/controller-operation',
+                    data: { type: elem.getAttribute('type') }
+                });
+            });
+        });
+    })();
+</script>
+
+</body>
+</html>

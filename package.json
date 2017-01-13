@@ -1,0 +1,32 @@
+{
+  "name": "v-framework",
+  "version": "0.0.1",
+  "description": "App framework",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "electron": "1.4.13",
+    "electron-prebuilt": "1.4.13",
+    "fs-extra": "1.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VisualSJ/v-framework.git"
+  },
+  "keywords": [
+    "app",
+    "framework"
+  ],
+  "author": "VisualSJ",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VisualSJ/v-framework/issues"
+  },
+  "homepage": "https://github.com/VisualSJ/v-framework#readme"
+}

@@ -1,0 +1,32 @@
+{
+  "style": {
+    "flex": 100,
+    "flex-direction": "row"
+  },
+  "children": [
+    {
+      "style": {
+        "width": "200px"
+      },
+      "name": "menu"
+    }, {
+      "style": {
+        "flex": 100,
+        "flex-direction": "column"
+      },
+      "children": [
+        {
+          "style": {
+            "height": "40px"
+          },
+          "name": "controller"
+        },{
+          "style": {
+            "flex": 100
+          },
+          "name": "helper"
+        }
+      ]
+    }
+  ]
+}

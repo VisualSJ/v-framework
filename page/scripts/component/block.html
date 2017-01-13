@@ -1,0 +1,11 @@
+<div class="layout-item layout-block" :style="layout.style" :item="!layout.children">
+    <template v-if="!layout.children">
+        <iframe :name="layout.name" :src="layout.path"></iframe>
+    </template>
+    <template v-if="layout.children">
+        <template v-for="(child,index) in layout.children">
+            <block :layout="child"></block>
+            <split v-if="index<layout.children.length-1" :direction="layout.style['flex-direction'] || 'row'"></split>
+        </template>
+    </template>
+</div>
