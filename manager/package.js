@@ -165,7 +165,9 @@ exports.load = function (path) {
     }
 
     paths.main = Path.join(path, options.main);
-    paths.page = Path.join(path, options.page);
+    if (options.page) {
+        paths.page = Path.join(path, options.page);
+    }
 
     var exports;
     try {

@@ -16,6 +16,7 @@ Event.mount(exports, 'app');
  * @param {Object} options
  */
 exports.start = function (options) {
+    options.packages.splice(0, 0, Path.join(__dirname, '../builtin'));
     Package.search(options.packages);
     options.autoHideMenuBar = true;
     Window.open(options.window);
