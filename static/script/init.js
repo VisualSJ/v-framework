@@ -48,4 +48,14 @@
     Package.Dialog = parentWindow.require('./scripts/lib/dialog');
     Package.Shell = parentWindow.require('./scripts/lib/shell');
 
+    /////////////
+    // require //
+    /////////////
+    const Path = parentWindow.require('path');
+    var base = Path.dirname(window.location.href);
+    base = base.replace(/file\:(\/)+/, '');
+    global.require = function (name) {
+        return parentWindow.require(Path.join(base, name));
+    };
+
 })(window);
