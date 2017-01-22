@@ -2,9 +2,7 @@
   width: 100%;
   height: 100%;
   display: flex;
-}
-.layout-item {
-  transition: flex 0.5s, width 0.5s;
+  position: relative;
 }
 .layout-block {
   display: flex;
@@ -13,9 +11,28 @@
   border: 1px solid #222;
   box-shadow: 0 0 1px #888888 inset;
 }
+.layout-split .drag-wrap[highlight] {
+  background: #666;
+}
 .layout-split[direction="row"] {
   width: 2px;
 }
+.layout-split[direction="row"] .drag-wrap {
+  position: relative;
+  left: -1px;
+  padding: 0 1px;
+  width: 100%;
+  height: 100%;
+  cursor: ew-resize;
+}
 .layout-split[direction="column"] {
   height: 2px;
+}
+.layout-split[direction="column"] .drag-wrap {
+  position: relative;
+  left: -1px;
+  padding: 1px 0;
+  width: 100%;
+  height: 100%;
+  cursor: ns-resize;
 }

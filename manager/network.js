@@ -1,5 +1,9 @@
 'use strict';
 
+/*
+用户和 page 层的网络数据交互
+ */
+
 const Electron = require('electron');
 const Ipc = Electron.ipcMain;
 

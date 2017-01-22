@@ -7,14 +7,27 @@
     <script src="app://script/init.js"></script>
 </head>
 <body>
-Test
+Wait events
 </body>
 </html>
 <script>
-    Package.listen('selected', function (event, data) {
-        document.body.innerHTML = data.text;
-    });
-    Package.listen('operation', function (event, type) {
-        document.body.innerHTML = type;
+    Package.listen('operation', function (event, data) {
+        document.body.innerHTML = `${data.type} (from ${data.from})`;
+
+        if (data.type === 'play') {
+            Package.ajax({
+                url: '/state-changed',
+                data: {
+                    state: 'played'
+                }
+            });
+        } else if (data.type === 'pause') {
+            Package.ajax({
+                url: '/state-changed',
+                data: {
+                    state: 'paused'
+                }
+            });
+        }
     });
 </script>

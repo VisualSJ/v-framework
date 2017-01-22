@@ -1,4 +1,7 @@
 'use strict';
+/*
+Core 层的数据中枢
+ */
 
 const Events = require('events');
 
@@ -20,6 +23,14 @@ exports.emit = function (...args) {
     EventManager.emit(...args);
 };
 
+/**
+ * 在某个 object 上挂载 event 数据中枢的转发器
+ * 这个对象在 on 注册事件的时候，事件会以 'name:message' 注册到事件中枢中
+ *
+ * @param object
+ * @param name
+ * @returns {*}
+ */
 exports.mount = function (object, name) {
 
     object.on = function (message, ...args) {

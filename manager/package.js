@@ -18,39 +18,60 @@ const PATH = {
 var cache = {};
 
 class Storage {
-    constructor (path) {
+    constructor(path) {
         this.length = 0;
         this.path = Path.join(path, '.temp', 'storage.json');
         this.data = Utils.loadStorage(this.path);
     }
 
-    setItem (key, value) {
+    /**
+     * 设置一个 item
+     * @param key
+     * @param value
+     * @returns {*}
+     */
+    setItem(key, value) {
         this.data[key] = value;
         Utils.saveStorage(this.data, this.path);
         return value;
     }
 
-    getItem (key) {
+    /**
+     * 获取存储在 storage 内的某个 item 的值
+     * @param key
+     * @returns {*}
+     */
+    getItem(key) {
         return this.data[key];
     }
 
-    removeItem (key) {
+    /**
+     * 删除存储的某个 item
+     * @param key
+     */
+    removeItem(key) {
         delete this.data[key];
         Utils.saveStorage(this.data, this.path);
     }
 
-    clear () {
+    /**
+     * 清空 storage
+     */
+    clear() {
         this.data = {};
         Utils.saveStorage(this.data, this.path);
     }
 
-    reload () {
+    /**
+     * 当外部文件或是特殊需求需要重新从 storage 文件重置
+     */
+    reload() {
         this.data = Utils.loadStorage(this.path);
     }
 }
 
 class Package {
-    constructor (options, paths, pkgExports) {
+    constructor(options, paths, pkgExports) {
         this.options = options;
         this.paths = paths;
         this.exports = pkgExports;
@@ -66,7 +87,13 @@ class Package {
         }
     }
 
-    send (name, message, ...args) {
+    /**
+     * 发送事件给其他插件
+     * @param name
+     * @param message
+     * @param args
+     */
+    send(name, message, ...args) {
         var event = {
             type: 'message',
             target: this,
@@ -75,17 +102,36 @@ class Package {
         exports.emit.apply(this, [`${name}:${message}`, event, ...args]);
     }
 
-    sendPage (message, data) {
+    /**
+     * 广播消息到每个插件，包括自己
+     * @param message
+     * @param data
+     */
+    broadcast(message, data) {
+        Object.keys(cache).forEach((name) => {
+            cache[name].send(name, message, data);
+        });
+    }
+
+    /**
+     * 推送消息给 page 层
+     * @param message
+     * @param data
+     */
+    push(message, data) {
         var name = this.options.name;
         Window.forEach(function (win) {
             win.nativeWindow.send('ipc-listen', `${name}:${message}`, data);
         });
     }
 
-    broadcast (message, data) {
-        Object.keys(cache).forEach((name) => {
-            cache[name].send(name, message, data);
-        });
+    /**
+     * 启动一个 child process
+     * @param script
+     */
+    worker(script) {
+        var path = Path.join(this.options.paths.base, script);
+        return new Utils.Worker(path);
     }
 }
 
@@ -188,6 +234,10 @@ exports.find = function (name) {
     return cache[name];
 };
 
+/*
+注册 package 协议
+使用 package://package-name/controller 访问插件内部注册的 interface
+ */
 Network.register('package:', function (event, data) {
     var pkg = cache[event.options.to];
     if (pkg && pkg.exports && pkg.exports.interfaces) {

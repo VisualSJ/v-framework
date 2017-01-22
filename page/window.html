@@ -8,7 +8,9 @@
     <link href="style/layout.css" rel="stylesheet" />
 </head>
 <body>
-<div id="layout">
+<div id="layout"
+    @mousedown="_onMouseDown"
+>
     <block :layout="layout"></block>
 </div>
 </body>

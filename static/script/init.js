@@ -1,12 +1,14 @@
+'use strict';
+
 (function (global) {
 
-    var parentDocument = this.parent.document;
-    var parentWindow = this.parent.window;
+    var parentDocument = global.parent.document;
+    var parentWindow = global.parent.window;
     global.Package = null;
 
     var frames = parentDocument.getElementsByTagName('iframe');
     Array.prototype.some.call(frames, (frame) => {
-        if (frame.contentWindow === this) {
+        if (frame.contentWindow === global) {
             global.Package = parentWindow.App.Package.create(frame.name);
         }
     });

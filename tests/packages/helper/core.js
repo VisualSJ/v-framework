@@ -14,16 +14,18 @@ exports.unload = function () {
 
 };
 
-exports.interfaces = {};
+exports.interfaces = {
+    '/state-changed' (event, data) {
+        this.broadcast('state-changed', data);
+    }
+};
 
 exports.messages = {
-
-    'menu-selected' (event, data) {
-        this.sendPage('selected', data);
-    },
-
     'controller-operation' (event, data) {
-        var operation = data.type;
-        this.sendPage('operation', operation);
+        var operation = {
+            type: data.type,
+            from: event.from
+        };
+        this.push('operation', operation);
     }
 };

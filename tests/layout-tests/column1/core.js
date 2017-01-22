@@ -13,11 +13,3 @@ exports.load = function () {
 exports.unload = function () {
 
 };
-
-exports.interfaces = {
-    '/selected' (event, data) {
-        this.broadcast('menu-selected', data);
-    }
-};
-
-exports.messages = {};

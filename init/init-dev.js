@@ -11,7 +11,10 @@ exports.off = function () {};
 exports.once = function () {};
 
 exports.start = function (options) {
-    var child = ChildProcess.spawn(ElectronPrebuilt, [process.cwd(), '--debug=5858']);
+    var child = ChildProcess.spawn(ElectronPrebuilt, [
+        Path.dirname(process.mainModule.filename),
+        '--debug=5858'
+    ]);
 
     child.on('exit', function() {
         console.log('Exit v-framework');

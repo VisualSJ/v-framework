@@ -10,6 +10,11 @@
             components: component,
             data: {
                 layout: {}
+            },
+            methods: {
+                '_onMouseDown' () {
+
+                }
             }
         });
         global.App.Network.ajax({

@@ -1,1 +1,14 @@
-<div class="layout-split" :direction="direction"></div>
+<div class="layout-split" :direction="direction" :index="index">
+    <div class="drag-wrap"
+         draggable="drag"
+
+         :highlight="highlight"
+
+         @mousedown="_onMouseDown"
+         @mouseup="_onMouseUp"
+
+         @dragstart="_onDragStart"
+         @drag="_onDrag"
+         @dragend="_onDragEnd"
+    ></div>
+</div>

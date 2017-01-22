@@ -22,4 +22,8 @@ exports.interfaces = {
     }
 };
 
-exports.messages = {};
+exports.messages = {
+    'state-changed' (event, data) {
+        this.push('state-changed', data);
+    }
+};
