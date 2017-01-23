@@ -23,7 +23,7 @@ Ipc.on('ipc-listen', function (event, message, data) {
 });
 
 /**
- *
+ * 发送消息到 core 层，去获取指定的数据
  * @param options
  * @param internal
  */
@@ -49,7 +49,7 @@ exports.send = function (options, internal) {
         let timer;
         if (options.timeout !== 0) {
             timer = setTimeout(() => {
-                console.log('[Network] ajax timeout.');
+                console.log('[Network] get timeout.');
             }, options.timeout);
         }
         callbackCache[requestID] = {

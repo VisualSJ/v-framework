@@ -15,14 +15,14 @@ Wait events
         document.body.innerHTML = `${data.type} (from ${data.from})`;
 
         if (data.type === 'play') {
-            Package.ajax({
+            Package.get({
                 url: '/state-changed',
                 data: {
                     state: 'played'
                 }
             });
         } else if (data.type === 'pause') {
-            Package.ajax({
+            Package.get({
                 url: '/state-changed',
                 data: {
                     state: 'paused'

@@ -9,7 +9,7 @@ class Package extends Events.EventEmitter{
         this.name = name;
     }
 
-    ajax (options) {
+    get (options) {
         options.url = `package://${this.name}` + options.url;
         Network.send(options, {
             from: this.name

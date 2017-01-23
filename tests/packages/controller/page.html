@@ -34,7 +34,7 @@
                 if (elem.getAttribute('disabled') !== null) {
                     return;
                 }
-                Package.ajax({
+                Package.get({
                     url: '/controller-operation',
                     data: { type: elem.getAttribute('type') }
                 });
