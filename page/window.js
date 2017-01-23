@@ -17,7 +17,7 @@
                 }
             }
         });
-        global.App.Network.ajax({
+        global.App.Network.send({
             url: 'app://window/query-layout-info',
             data: {id: global.App.id},
             callback: function (error, layout) {

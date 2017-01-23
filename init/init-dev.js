@@ -27,6 +27,11 @@ exports.start = function (options) {
     });
 };
 
+/**
+ * 发布程序
+ * 将项目按照 electron 格式整理好，发布到指定文件夹内
+ * @param options
+ */
 exports.build = function (options) {
     var source = options.source;
     var output = options.output;

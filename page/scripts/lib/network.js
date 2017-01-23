@@ -5,16 +5,29 @@ const Ipc = Electron.ipcRenderer;
 const Url = require('url');
 
 var requestID = 1;
+var messages = {};
 var callbackCache = {};
 
-Ipc.on('ipc-ajax-reply', function (event, options, error, data) {
+Ipc.on('ipc-request-reply', function (event, options, error, data) {
     var item = callbackCache[options.id];
-    if (!item) console.warn(`${options.id}@renderer ajax reply is missing`);
+    if (!item) console.warn(`${options.id}@renderer request is missing`);
     clearTimeout(item.timer);
     item.callback(error, data);
 });
 
-exports.ajax = function (options, internal) {
+Ipc.on('ipc-listen', function (event, message, data) {
+    var handler = messages[message];
+    if (handler) {
+        handler(event, data);
+    }
+});
+
+/**
+ *
+ * @param options
+ * @param internal
+ */
+exports.send = function (options, internal) {
     var item = Url.parse(options.url);
 
     // 默认参数
@@ -48,17 +61,8 @@ exports.ajax = function (options, internal) {
     }
 
     requestID++;
-    Ipc.send('ipc-ajax', additional, options.data);
+    Ipc.send('ipc-request', additional, options.data);
 };
-
-var messages = {};
-
-Ipc.on('ipc-listen', function (event, message, data) {
-    var handler = messages[message];
-    if (handler) {
-        handler(event, data);
-    }
-});
 
 exports.listen = function (message, handler) {
     messages[message] = handler;

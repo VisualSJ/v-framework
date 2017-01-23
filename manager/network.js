@@ -9,20 +9,20 @@ const Ipc = Electron.ipcMain;
 
 class IpcEvent {
     constructor (event, options) {
-        this.type = 'ajax';
+        this.type = 'ipc';
         this.options = options;
         this.sender = event.sender;
     }
 
     reply (error, data) {
         if (!this.options.needCallback) return;
-        this.sender.send('ipc-ajax-reply', this.options, error, data);
+        this.sender.send('ipc-request-reply', this.options, error, data);
     }
 }
 
 var handler = {};
 
-Ipc.on('ipc-ajax', (event, options, data) => {
+Ipc.on('ipc-request', (event, options, data) => {
     var func = handler[options.protocol];
     var ipcEvent = new IpcEvent(event, options);
     if (func) {

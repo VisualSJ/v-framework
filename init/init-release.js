@@ -16,19 +16,19 @@ Event.mount(exports, 'app');
  * @param {Object} options
  */
 exports.start = function (options) {
-    options.packages.splice(0, 0, Path.join(__dirname, '../builtin'));
+    // 内置插件
+    Package.search(Path.join(__dirname, '../builtin'));
+    // 用户的插件
     Package.search(options.packages);
-    options.autoHideMenuBar = true;
+    // 打开窗口
     Window.open(options.window);
 };
 
 /**
- *
- * @param {Object} options
+ * 发布程序
+ * 在发布模式下无效
  */
-exports.build = function (options) {
-
-};
+exports.build = function () {};
 
 exports.Interface = Interface;
 

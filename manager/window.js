@@ -36,6 +36,9 @@ class Window {
         this.nativeWindow = new BrowserWindow(options);
         this.nativeWindow.loadURL(Path.join(__dirname, '../page/window.html'));
 
+        // TODO Menu 没有准备好，所以暂时关闭所有的菜单
+        this.nativeWindow.setMenuBarVisibility(false);
+
         this.nativeWindow.webContents.on('did-finish-load', () => {
             this.nativeWindow.webContents.send('initialization', this.id);
         });
