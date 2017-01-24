@@ -3,6 +3,7 @@
 const Path = require('path');
 const Layout = require('./layout');
 const Interface = require('../init/interface');
+const Console = require('./console');
 
 const Electron = require('electron');
 const {app, BrowserWindow} = Electron;
@@ -75,6 +76,9 @@ exports.forEach = function (handler) {
     });
 };
 
+/**
+ * app://window/xxx
+ */
 Interface.add('window', {
     '/query-layout-info': function (event, data) {
         var win = cache[data.id];
@@ -82,4 +86,31 @@ Interface.add('window', {
             return event.reply(`Window is not found: ${data.id}`, null);
         event.reply(null, win.layout.json);
     }
+});
+
+/**
+ * app://window-console/xxx
+ */
+Interface.add('window-console', {
+    '/trace' (event, args) {
+        Console.tarce(...args);
+    },
+    '/debug' (event, args) {
+        Console.debug(...args);
+    },
+    '/log' (event, args) {
+        Console.log(...args);
+    },
+    '/info' (event, args) {
+        Console.info(...args);
+    },
+    '/warn' (event, args) {
+        Console.warn(...args);
+    },
+    '/error' (event, args) {
+        Console.error(...args);
+    },
+    '/fatal' (event, args) {
+        Console.fatal(...args);
+    },
 });

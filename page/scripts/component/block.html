@@ -4,14 +4,10 @@
 
      @change="_doLayout"
 >
-    <template
+    <page
             v-if="!layout.children"
-    >
-        <iframe
-                :name="layout.name"
-                :src="layout.path"
-        ></iframe>
-    </template>
+            :name="layout.name"
+    ></page>
     <template
             v-if="layout.children"
     >

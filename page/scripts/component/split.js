@@ -7,8 +7,6 @@ exports.template = Fs.readFileSync(Path.join(__dirname, './split.html'), 'utf-8'
 
 exports.props = ['direction', 'drag', 'index'];
 
-exports.components = {};
-
 exports.data = function () {
     return {
         highlight: false

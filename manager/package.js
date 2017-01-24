@@ -3,7 +3,8 @@
 const Fs = require('fs');
 const Path = require('path');
 
-const Event = require('../manager/event');
+const Console = require('./console');
+const Event = require('./event');
 const Window = require('./window');
 const Network = require('./network');
 const Interface = require('../init/interface');
@@ -149,19 +150,19 @@ exports.load = function (path) {
     };
 
     if (!Fs.existsSync(paths.json)) {
-        return console.log(`[Package] ${paths.json} is not found.`);
+        return Console.warn(`[Package] ${paths.json} is not found.`);
     }
 
     var options;
     try {
         options = JSON.parse(Fs.readFileSync(paths.json, 'utf-8'));
     } catch (error) {
-        return console.log(`[Package] ${paths.json} parse error.`);
+        return Console.warn(`[Package] ${paths.json} parse error.`);
     }
 
     // 检查必须参数是否正常
     if (!options.name) {
-        return console.log(`[Package] ${paths.json} - 'name' is not found.`);
+        return Console.warn(`[Package] ${paths.json} - 'name' is not found.`);
     }
 
     paths.main = Path.join(path, options.main);
@@ -174,7 +175,7 @@ exports.load = function (path) {
         exports = require(paths.main);
     } catch (error) {
         exports = {};
-        console.error(`[Package] require ${options.name} load error.`);
+        Console.error(`[Package] require ${options.name} load error.`);
     }
 
     cache[options.name] = new Package(
@@ -186,19 +187,40 @@ exports.load = function (path) {
     try {
         exports.load.call(cache[options.name]);
     } catch (error) {
-        console.error(`[Package] ${options.name} load func error.`);
-        console.error(error);
+        Console.error(`[Package] ${options.name} load func error.`);
+        Console.error(error);
     }
 
-    console.log(`[Package] ${options.name} is loaded.`);
+    Console.log(`[Package] ${options.name} is loaded.`);
+
+    Window.forEach(function (win) {
+        win.nativeWindow.send('ipc-listen', 'package-loaded', {
+            name: options.name
+        });
+    });
 };
 
 /**
  * 卸载插件
- * @param {String} path
+ * @param {String} name
  */
-exports.unload = function (path) {
-    // todo 卸载插件
+exports.unload = function (name) {
+    var pkg = cache[name];
+    if (!pkg) {
+        return Console.warn(`Package(${name}) is not found.`);
+    }
+
+    delete cache[name];
+
+    Utils.clearRequireCache(pkg.paths.base);
+
+    Console.log(`[Package] ${name} is unloaded.`);
+
+    Window.forEach(function (win) {
+        win.nativeWindow.send('ipc-listen', 'package-unloaded', {
+            name: name
+        });
+    });
 };
 
 /**
@@ -213,11 +235,11 @@ exports.search = function (paths) {
 
     paths.forEach(function (path) {
         if (!Fs.existsSync(path)) {
-            return console.log(`[Package] ${path} is not found.`);
+            return Console.warn(`[Package] ${path} is not found.`);
         }
         var stat = Fs.statSync(path);
         if (!stat.isDirectory()) {
-            return console.log(`[Package] ${path} is not directory.`);
+            return Console.warn(`[Package] ${path} is not directory.`);
         }
 
         var list = Fs.readdirSync(path);
@@ -236,9 +258,10 @@ exports.find = function (name) {
     return cache[name];
 };
 
-/*
-注册 package 协议
-使用 package://package-name/controller 访问插件内部注册的 interface
+/**
+ * 注册 package 协议
+ * package://package-name/controller
+ * 访问插件内部注册的 interface
  */
 Network.register('package:', function (event, data) {
     var pkg = cache[event.options.to];
@@ -251,14 +274,45 @@ Network.register('package:', function (event, data) {
     event.reply(`Interface is not found: package://${event.options.to}${event.options.path}`);
 });
 
+/**
+ * app://package/xxx
+ */
 Interface.add('package', {
+    /**
+     * 加载插件的消息
+     * @param event
+     * @param data
+     */
+    '/load' (event, data) {
+        exports.load(data.path);
+    },
+
+    /**
+     * 加载插件的消息
+     * @param event
+     * @param data
+     */
+    '/unload' (event, data) {
+        exports.unload(data.name);
+    },
+
+    /**
+     * 查询插件列表
+     * @param event
+     */
     '/query-all-name': function (event) {
         event.reply(null, Object.keys(cache));
     },
+
+    /**
+     * 查询一个插件信息
+     * @param event
+     * @param data
+     */
     '/query-package-info': function (event, data) {
         var pkg = cache[data.name];
         if (!pkg) {
-            return event.reply(`Package is not found: ${data.id}`, null);
+            return event.reply(`Package is not found: ${data.name}`, null);
         }
         event.reply(null, pkg.paths);
     }

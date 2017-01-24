@@ -11,11 +11,7 @@
             data: {
                 layout: {}
             },
-            methods: {
-                '_onMouseDown' () {
-
-                }
-            }
+            methods: {}
         });
         global.App.Network.send({
             url: 'app://window/query-layout-info',
@@ -24,6 +20,12 @@
                 window.globalVM.layout = layout;
             }
         });
+        var updatePackage = function (event, data) {
+            var $el = document.getElementById(`package-${data.name}`);
+            $el.__vue__.path = '';
+        };
+        global.App.Network.listen('package-loaded', updatePackage);
+        global.App.Network.listen('package-unloaded', updatePackage);
     });
 
 })(window);

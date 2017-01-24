@@ -9,11 +9,14 @@ exports.props = ['layout'];
 
 exports.components = {
     block: exports,
-    split: require('./split')
+    split: require('./split'),
+    page: require('./page'),
 };
 
 exports.data = function () {
-    return {};
+    return {
+        path: ''
+    };
 };
 
 var getType = function (style) {

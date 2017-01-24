@@ -7,25 +7,34 @@
 将 app://package/xxx 导流到指定的处理器内
  */
 
+const Console = require('../manager/console');
 const Network = require('../manager/network');
 
 const Interfaces = {};
 
 /**
- *
+ * 注册访问方法到 app:// 下
  * @param {String} name
  * @param {Object} handler
  */
 exports.add = function (name, handler) {
-    console.log(`[Interface] Add handler - ${name}`);
+    Console.trace(`[Interface] register - app://${name}`);
     Interfaces[name] = handler;
 };
 
-exports.remove = function (name, handler) {
-    console.log(`[Interface] Remove handler - ${name}`);
+/**
+ * 删除已经注册的访问方法
+ * @param name
+ */
+exports.remove = function (name) {
+    Console.trace(`[Interface] register - app://${name}`);
     delete Interfaces[name];
 };
 
+/**
+ * 注册 app 协议
+ * 使用 app://xxx 进入到这个处理函数内
+ */
 Network.register('app:', function (event, data) {
     var cache = Interfaces[event.options.to];
     if (cache) {
@@ -34,5 +43,7 @@ Network.register('app:', function (event, data) {
             return handler(event, data);
         }
     }
-    event.reply(`Interface is not found: app://${event.options.to}/${event.options.path}`);
+    var message = `Interface is not found: app://${event.options.to}/${event.options.path}`;
+    Console.warn(message);
+    event.reply(message);
 });

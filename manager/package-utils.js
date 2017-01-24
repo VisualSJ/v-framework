@@ -7,6 +7,8 @@ Package 使用的工具库
 const Fs = require('fs');
 const Path = require('path');
 
+const Console = require('./console');
+
 const Electron = require('electron');
 const {app, BrowserWindow} = Electron;
 
@@ -25,7 +27,7 @@ exports.loadStorage = function (path) {
         var string = Fs.readFileSync(path, 'utf-8');
         return JSON.parse(string);
     } catch (error) {
-        console.error(error);
+        Console.error(error);
         return {};
     }
 };
@@ -56,6 +58,22 @@ app.on('ready', function () {
     });
     cache = [];
 });
+
+/**
+ * 清除指定目录下的所有 require 缓存
+ * @param base
+ */
+exports.clearRequireCache = function (base) {
+    base = Path.normalize(base);
+    var keys = Object.keys(require.cache);
+    var list = keys.filter(function (key) {
+        return Path.normalize(key).indexOf(base) === 0;
+    });
+
+    list.forEach(function (key) {
+        delete require.cache[key];
+    });
+};
 
 /**
  * Worker 进程
