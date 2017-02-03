@@ -39,6 +39,7 @@
               "name": "row1"
             },
             {
+              "drag": false,
               "style": {
                 "width": "50px",
                 "min-width": "50px"

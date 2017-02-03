@@ -85,9 +85,16 @@ var forwardMovement = function (index, moveOffset, childTemp, flexTotalOffset, t
     var count = 0;
     for (let i=index; i<childTemp.length && moveOffset>0; i++) {
         let child = childTemp[i];
+
+        if (!child) {
+            return flexTotalOffset;
+        }
+
         if (count === 0) {
             if (child.drag === false) {
-                return flexTotalOffset;
+                i -= 2;
+                index -= 1;
+                continue;
             }
             if (child.type === type) {
                 flexTotalOffset -= moveOffset;
@@ -126,9 +133,16 @@ var reverseMovement = function (index, moveOffset, childTemp, flexTotalOffset, t
     moveOffset = -moveOffset;
     for (let i=index+1; i>=0 && moveOffset>0; i--) {
         let child = childTemp[i];
+
+        if (!child) {
+            return flexTotalOffset;
+        }
+
         if (count === 0) {
             if (child.drag === false) {
-                return flexTotalOffset;
+                i += 2;
+                index += 1;
+                continue;
             }
             if (child.type === type) {
                 flexTotalOffset -= moveOffset;
