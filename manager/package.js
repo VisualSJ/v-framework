@@ -95,12 +95,16 @@ class Package {
      * @param args
      */
     send(name, message, ...args) {
+        var target = cache[name];
+        if (!target) {
+            return;
+        }
         var event = {
             type: 'message',
             target: this,
             from: this.options.name
         };
-        exports.emit.apply(this, [`${name}:${message}`, event, ...args]);
+        exports.emit.apply(target, [`${name}:${message}`, event, ...args]);
     }
 
     /**
@@ -110,7 +114,7 @@ class Package {
      */
     broadcast(message, data) {
         Object.keys(cache).forEach((name) => {
-            cache[name].send(name, message, data);
+            this.send(name, message, data);
         });
     }
 
@@ -131,7 +135,7 @@ class Package {
      * @param script
      */
     worker(script) {
-        var path = Path.join(this.options.paths.base, script);
+        var path = Path.join(this.paths.base, script);
         return new Utils.Worker(path);
     }
 }
