@@ -34,6 +34,22 @@ class Window {
 
         this.layout = Layout.load(options.layout);
 
+        // 设置最小的宽高
+        (() => {
+            var json = this.layout.json;
+            if (!json) {
+                return Console.warn(`Layuot is not found!`);
+            }
+            var minHeight = parseInt(json.style['min-height']);
+            var minWidth = parseInt(json.style['min-width']);
+            if (minHeight && !isNaN(minHeight)) {
+                options.minHeight = minHeight + 39;
+            }
+            if (minWidth && !isNaN(minWidth)) {
+                options.minWidth = minWidth + 16;
+            }
+        })();
+
         this.nativeWindow = new BrowserWindow(options);
         this.nativeWindow.loadURL(Path.join(__dirname, '../page/window.html'));
 

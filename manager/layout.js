@@ -77,7 +77,7 @@ var parsePackage = function (item) {
         json.style['min-height'] = maxHeight + 'px';
     }
 
-    json.name = item.name;
+    json.name = item.name || '';
 
     return json;
 };
